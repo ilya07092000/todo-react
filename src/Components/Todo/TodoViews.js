@@ -10,9 +10,9 @@ function TodoView(props) {
   })
 
   return (
-    <div>
+    <>
       {todo}
-    </div>
+    </>
   )
 } 
 
