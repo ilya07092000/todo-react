@@ -1,89 +1,63 @@
 import logo from './logo.svg';
-import React from 'react';
+import React, { useState } from 'react';
 import TodoViews from './Components/Todo/TodoViews';
 
 import './App.scss';
 import './styles/main.scss';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todos: [
-        {
-          id: 1, 
-          title: 'Do smth', 
-          description: 'desc',
-        }
-      ],
-      inputValue: '',
-      correctValue: true,
-    }
-  } 
+function App() {
+  let [todos, setTodos] = useState([{
+    id: 1, 
+    title: 'Do smth', 
+    description: 'desc',
+  }]);
+  let [inputValue, setInputValue] = useState('');
+  let [correctValue, setCorrectValue] = useState(true);
 
-  inputChange(event) {
-    this.setState({
-      inputValue: event.target.value,
-    })
+  function inputHandler(event) {
+    setInputValue(event.target.value)
   }
 
-  addTodos() {
-    let todo = this.state.inputValue;
+  function addTodosHandler() {
+    let todo = inputValue;
 
     if(!todo.trim()) {
-      this.setState({
-        correctValue: false,
-      })
-
+      correctValue = true;
       return;
     };
 
-    if (!this.state.correctValue) {
-      this.setState({
-        correctValue: true,
-      })
+    if (!correctValue) {
+      correctValue = true;
     }
 
-    let newTodos = [...this.state.todos];
-
-    newTodos.push({
-      id: Date.now(),
+    setTodos(todos.concat([{
       title: todo,
-    });
+      id: Date.now(), 
+    }]));
 
-    this.setState({
-      todos: newTodos,
-      inputValue: '',
-    })
+    setInputValue(inputValue = '');
   }
 
-  deleteTodos(id) {
-    let todos = this.state.todos;
-    let todosId = todos.findIndex(todo => todo.id === id);
-    todos.splice(todosId, 1);
-
-    this.setState({
-      todos,
-    })
+  function deleteTodos(id) {
+    setTodos(todos.filter(todo => todo.id !== id));
   }
 
-  render() {
-    return (
-      <main>
-        <div className="container">
-          <div className="main__inner">
-            <div className="input-block">
-              <div className={[this.state.correctValue ? 'input-block_green' : 'input-block_red' ,'input-block__inner'].join(' ')}>
-                <input placeholder="enter your task" value={this.state.inputValue} onChange={this.inputChange.bind(this)} />
-                <button onClick={this.addTodos.bind(this)}>Submit</button>
-              </div>
-            </div>  
-            <TodoViews onDelete={(id) => this.deleteTodos(id)} todos={this.state.todos}/>
+  return (
+    <main>
+      <div className="container">
+        <div className="main__inner">
+          <div className="input-block">
+            <div className={[correctValue ? 'input-block_green' : 'input-block_red' ,'input-block__inner'].join(' ')}>
+              <input placeholder="enter your task" value={ inputValue } onChange={ inputHandler }/>
+              <button onClick={addTodosHandler}>Submit</button>
             </div>
+          </div>  
+          <TodoViews onDelete={(id) => deleteTodos(id)} todos={todos}/>
         </div>
-      </main>
-    )
-  }
+      </div>
+    </main>
+  )
 }
 
 export default App;
+
