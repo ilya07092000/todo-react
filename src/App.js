@@ -57,6 +57,16 @@ class App extends React.Component {
     })
   }
 
+  deleteTodos(id) {
+    let todos = this.state.todos;
+    let todosId = todos.findIndex(todo => todo.id === id);
+    todos.splice(todosId, 1);
+
+    this.setState({
+      todos,
+    })
+  }
+
   render() {
     return (
       <main>
@@ -68,7 +78,7 @@ class App extends React.Component {
                 <button onClick={this.addTodos.bind(this)}>Submit</button>
               </div>
             </div>  
-            <TodoViews todos={this.state.todos}/>
+            <TodoViews onDelete={(id) => this.deleteTodos(id)} todos={this.state.todos}/>
             </div>
         </div>
       </main>

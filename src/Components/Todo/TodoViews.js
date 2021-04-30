@@ -5,7 +5,7 @@ function TodoView(props) {
   
   let todo = props.todos.map((todo, index) => {
     return (
-      <TodoItem todo={todo} key={index}/>
+      <TodoItem onDelete={(id) => props.onDelete(id)} todo={todo} key={index}/>
     )
   })
 
