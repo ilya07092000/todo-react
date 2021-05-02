@@ -1,16 +1,14 @@
 import logo from './logo.svg';
 import React, { useState } from 'react';
 import TodoViews from './Components/Todo/TodoViews';
+import { connect } from 'react-redux';
+import { addTask, removeTask } from './actions/actionCreator';
 
 import './App.scss';
 import './styles/main.scss';
 
-function App() {
-  let [todos, setTodos] = useState([{
-    id: 1, 
-    title: 'Do smth', 
-    description: 'desc',
-  }]);
+function App(props) {
+  // let [todos, setTodos] = useState([]);
   let [inputValue, setInputValue] = useState('');
   let [correctValue, setCorrectValue] = useState(true);
 
@@ -30,16 +28,13 @@ function App() {
       correctValue = true;
     }
 
-    setTodos(todos.concat([{
-      title: todo,
-      id: Date.now(), 
-    }]));
+    props.addTask(Date.now(), todo);
 
     setInputValue(inputValue = '');
   }
 
   function deleteTodos(id) {
-    setTodos(todos.filter(todo => todo.id !== id));
+    props.removeTask(id);
   }
 
   return (
@@ -52,12 +47,14 @@ function App() {
               <button onClick={addTodosHandler}>Submit</button>
             </div>
           </div>  
-          <TodoViews onDelete={(id) => deleteTodos(id)} todos={todos}/>
+          <TodoViews onDelete={(id) => deleteTodos(id)} todos={props.tasks}/>
         </div>
       </div>
     </main>
   )
 }
 
-export default App;
+export default connect(state => ({
+  tasks: state.tasks
+}), { addTask, removeTask })(App);
 
